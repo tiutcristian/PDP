@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
 public static class AwaitHttpDownloader
 {
     private static Task ConnectAsync(Socket socket, EndPoint ep)
@@ -59,12 +67,12 @@ public static class AwaitHttpDownloader
         Uri uri = new Uri(url);
         Console.WriteLine($"[await] Start: {uri} -> {outputPath}");
 
-        var ep = Program.CreateEndPoint(uri);
+        var ep = Utils.CreateEndPoint(uri);
         using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
         {
             await ConnectAsync(socket, ep);
 
-            string request = Program.BuildRequest(uri);
+            string request = Utils.BuildRequest(uri);
             byte[] requestBytes = Encoding.ASCII.GetBytes(request);
 
             int totalSent = 0;
@@ -99,7 +107,6 @@ public static class AwaitHttpDownloader
                 int n = await ReceiveAsync(socket, buffer, 0, buffer.Length);
                 if (n <= 0)
                 {
-                    // connection closed
                     break;
                 }
 
@@ -109,12 +116,12 @@ public static class AwaitHttpDownloader
                         accumulator.Add(buffer[i]);
 
                     byte[] all = accumulator.ToArray();
-                    int headerEnd = Program.FindHeaderEnd(all, all.Length);
+                    int headerEnd = Utils.FindHeaderEnd(all, all.Length);
 
                     if (headerEnd >= 0)
                     {
                         string headerString = Encoding.ASCII.GetString(all, 0, headerEnd);
-                        contentLength = Program.ParseContentLength(headerString);
+                        contentLength = Utils.ParseContentLength(headerString);
 
                         Console.WriteLine("[await] Headers:");
                         Console.WriteLine(headerString);

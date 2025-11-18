@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
 public class CallbackHttpDownloader
 {
     private readonly Uri _uri;
@@ -24,7 +32,7 @@ public class CallbackHttpDownloader
     public void Start()
     {
         Console.WriteLine($"[callbacks] Start: {_uri} -> {_outputFile}");
-        var ep = Program.CreateEndPoint(_uri);
+        var ep = Utils.CreateEndPoint(_uri);
 
         _socket.BeginConnect(ep, OnConnected, null);
     }
@@ -35,7 +43,7 @@ public class CallbackHttpDownloader
         {
             _socket.EndConnect(ar);
 
-            string request = Program.BuildRequest(_uri);
+            string request = Utils.BuildRequest(_uri);
             byte[] requestBytes = Encoding.ASCII.GetBytes(request);
 
             _socket.BeginSend(requestBytes, 0, requestBytes.Length, SocketFlags.None, OnSent, null);
@@ -94,12 +102,12 @@ public class CallbackHttpDownloader
                 _headerBuffer.Add(_buffer[i]);
 
             byte[] all = _headerBuffer.ToArray();
-            int headerEnd = Program.FindHeaderEnd(all, all.Length);
+            int headerEnd = Utils.FindHeaderEnd(all, all.Length);
 
             if (headerEnd >= 0)
             {
                 string headerString = Encoding.ASCII.GetString(all, 0, headerEnd);
-                _contentLength = Program.ParseContentLength(headerString);
+                _contentLength = Utils.ParseContentLength(headerString);
 
                 Console.WriteLine("[callbacks] Headers:");
                 Console.WriteLine(headerString);

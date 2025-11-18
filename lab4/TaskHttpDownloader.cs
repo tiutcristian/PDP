@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+
 public static class TaskHttpDownloader
 {
     private static Task ConnectTask(Socket socket, EndPoint ep)
@@ -73,7 +81,7 @@ public static class TaskHttpDownloader
         Console.WriteLine($"[tasks] Start: {url} -> {outputPath}");
 
         Uri uri = new Uri(url);
-        var ep = Program.CreateEndPoint(uri);
+        var ep = Utils.CreateEndPoint(uri);
         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         var state = new State
@@ -83,7 +91,7 @@ public static class TaskHttpDownloader
             Socket = socket
         };
 
-        string request = Program.BuildRequest(uri);
+        string request = Utils.BuildRequest(uri);
         byte[] requestBytes = Encoding.ASCII.GetBytes(request);
 
         return ConnectTask(socket, ep)
@@ -138,12 +146,12 @@ public static class TaskHttpDownloader
                         state.HeaderBuffer.Add(state.Buffer[i]);
 
                     byte[] all = state.HeaderBuffer.ToArray();
-                    int headerEnd = Program.FindHeaderEnd(all, all.Length);
+                    int headerEnd = Utils.FindHeaderEnd(all, all.Length);
 
                     if (headerEnd >= 0)
                     {
                         string headerString = Encoding.ASCII.GetString(all, 0, headerEnd);
-                        state.ContentLength = Program.ParseContentLength(headerString);
+                        state.ContentLength = Utils.ParseContentLength(headerString);
 
                         Console.WriteLine("[tasks] Headers:");
                         Console.WriteLine(headerString);

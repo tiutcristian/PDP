@@ -1,4 +1,8 @@
-﻿public static class Program
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -13,8 +17,8 @@
             "http://httpbin.org/bytes/65536"
         ];
 
-        RunCallbacksMode(urls);
-        // RunTasksMode(urls);
+        // RunCallbacksMode(urls);
+        RunTasksMode(urls);
         // RunAwaitMode(urls);
     }
 

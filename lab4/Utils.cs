@@ -1,3 +1,8 @@
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+
 public class Utils
 {
     public static string BuildRequest(Uri uri)
