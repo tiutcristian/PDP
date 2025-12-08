@@ -2,3 +2,7 @@
 /lab4/obj
 /lab4/.vscode
 *.bin
+/lab5/.idea
+/lab6/.idea
+.DS_Store
+lab6/config.txt
