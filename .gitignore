@@ -6,3 +6,6 @@
 /lab6/.idea
 .DS_Store
 lab6/config.txt
+/.vscode
+/lab7/.vscode
+/lab8/.vscode
