@@ -1,0 +1,15 @@
+Times
+
+N=512
+NUM_STEPS = 1000
+Time: 1.436054 s
+
+
+N=2048
+NUM_STEPS = 1000
+Time: 8.238308 s
+
+
+N=2048
+NUM_STEPS = 5000
+Time: 43.134920 s
